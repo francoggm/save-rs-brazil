@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    environment:
+      - PORT=8080
+      - DBUSER=postgres
+      - DBPASSWORD=password
+      - DBHOST=database
+      - DBPORT=5432
+      - DB=posts
+    # restart: always
+  
+  database:
+    image: postgres:latest
+    ports:
+      - 8090:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=posts
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database-volume:/var/lib/postgresql/data
+    
