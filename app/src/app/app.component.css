@@ -1,0 +1,11 @@
+.navlist {
+  justify-content: space-around;
+}
+
+.navlist-btn {
+  font-size: 18px;
+}
+
+.navlist-btn-icon {
+  transform: scale(1.3);
+}
