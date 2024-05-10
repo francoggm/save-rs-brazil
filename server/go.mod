@@ -5,6 +5,7 @@ go 1.21.0
 require (
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/gofiber/fiber/v3 v3.0.0-beta.2
+	github.com/gofiber/utils v1.1.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 )

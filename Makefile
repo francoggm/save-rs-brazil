@@ -1,11 +1,19 @@
+create-server:
+	@echo Building and starting server
+	docker-compose up --build -d
+
 start-server:
 	@echo Starting backend server
-	docker-compose up --build -d 
+	docker-compose up -d 
 
 stop-server:
 	@echo Stopping backend
-	docker-compose down
+	docker-compose down backend
 
-server-debug:
-	@echo Start debug in server
-	cd src && go run main.go
+stop-all:
+	@echo Stopping all
+	docker-compose down	
+
+debug-server:
+	@echo Starting debug (local) server
+	cd server && go run cmd/api/main.go

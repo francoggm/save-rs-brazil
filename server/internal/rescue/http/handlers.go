@@ -1,38 +1,24 @@
-package handlers
+package http
 
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/francoggm/save-rs-brazil/infra/database"
-	"github.com/francoggm/save-rs-brazil/infra/database/repository"
-	"github.com/francoggm/save-rs-brazil/models"
+	"github.com/francoggm/save-rs-brazil/internal/models"
+	"github.com/francoggm/save-rs-brazil/internal/rescue/repository"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jmoiron/sqlx"
 )
 
-func RescueHandlers(app *fiber.App, db *database.DB) {
-	gp := app.Group("/rescue")
-
-	gp.Post("/", func(c fiber.Ctx) error {
-		return createRescue(c, db)
-	})
-
-	gp.Get("/", func(c fiber.Ctx) error {
-		return getRescues(c, db)
-	})
-
-	gp.Get("/:id", func(c fiber.Ctx) error {
-		return getRescue(c, db)
-	})
-}
-
-func createRescue(c fiber.Ctx, db *database.DB) error {
+func createRescue(c fiber.Ctx, db *sqlx.DB) error {
 	rescue := new(models.Rescue)
 
 	if err := c.Bind().Body(rescue); err != nil {
+		fmt.Println(err)
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
 			"error": "invalid fields!",
 		})
@@ -40,12 +26,14 @@ func createRescue(c fiber.Ctx, db *database.DB) error {
 
 	validate := validator.New()
 	if err := validate.Struct(rescue); err != nil {
+		fmt.Println(err)
 		return c.Status(http.StatusUnprocessableEntity).JSON(map[string]any{
-			"error": "missing required fields!",
+			"error": "invalid required fields!",
 		})
 	}
 
 	if err := repository.CreateRescue(db, rescue); err != nil {
+		fmt.Println(err)
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
 			"error": err.Error(),
 		})
@@ -54,7 +42,7 @@ func createRescue(c fiber.Ctx, db *database.DB) error {
 	return c.Status(http.StatusOK).JSON(rescue)
 }
 
-func getRescues(c fiber.Ctx, db *database.DB) error {
+func getRescues(c fiber.Ctx, db *sqlx.DB) error {
 	rescues, err := repository.GetRescues(db)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
@@ -65,7 +53,7 @@ func getRescues(c fiber.Ctx, db *database.DB) error {
 	return c.Status(http.StatusOK).JSON(rescues)
 }
 
-func getRescue(c fiber.Ctx, db *database.DB) error {
+func getRescue(c fiber.Ctx, db *sqlx.DB) error {
 	param := c.Params("id")
 	id, err := strconv.Atoi(param)
 	if err != nil {

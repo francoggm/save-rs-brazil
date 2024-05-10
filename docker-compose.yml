@@ -1,25 +1,28 @@
 version: '3.9'
 
 services:
-  # backend:
-  #   build: .
-  #   ports:
-  #     - 8080:8080
-  #   depends_on:
-  #     - database
-  #   environment:
-  #     - PORT=8080
-  #     - DBUSER=postgres
-  #     - DBPASSWORD=password
-  #     - DBHOST=database
-  #     - DBPORT=5432
-  #     - DB=posts
-    # restart: always
+  backend:
+    build: 
+      context: ./server
+      dockerfile: docker/Dockerfile
+  
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    environment:
+      - PORT=8080
+      - DBUSER=postgres
+      - DBPASSWORD=password
+      - DBHOST=database
+      - DBPORT=5432
+      - DB=posts
+    restart: always
   
   database:
     image: postgres:latest
     ports:
-      - 8090:5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
