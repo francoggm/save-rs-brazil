@@ -12,6 +12,7 @@ services:
       - database
     environment:
       - PORT=8080
+      - MODE=debug
       - DBUSER=postgres
       - DBPASSWORD=password
       - DBHOST=database
