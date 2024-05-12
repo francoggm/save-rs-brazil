@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" class="navbar">
+  <span class="navbar-title">{{title}}</span>
+  <span class="spacer"></span>
+  
+  <div class="navbar-items">
+    @for (path of paths; track path) {
+      @if(router.url === path.path) {
+        <button mat-raised-button routerLink="{{ path.path }}" class="navbar-items-btn">
+          <mat-icon fontIcon="{{ path.icon }}" class='navbar-items-btn-icon'></mat-icon>
+          {{ path.placeholder }}
+        </button> 
+      } @else {
+        <button mat-button routerLink="{{ path.path }}" class="navbar-items-btn">
+          <mat-icon fontIcon="{{ path.icon }}" class='navbar-items-btn-icon'></mat-icon>
+          {{ path.placeholder }}
+        </button> 
+      }
+    }  
+  </div>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Pesquisar</mat-label>
+    <input matInput type="text" class="custom-input">
+    <button mat-icon-button matSuffix aria-label="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+</mat-toolbar>
