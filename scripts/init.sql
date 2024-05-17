@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "animals" (
   "gender"       smallint NOT NULL, 
   "state"        smallint NOT NULL,
   "description"  text,
+  "city"         varchar(50),
   "street"       varchar(100),
 	"number"       integer,
 	"neighborhood" varchar(100) NOT NULL,

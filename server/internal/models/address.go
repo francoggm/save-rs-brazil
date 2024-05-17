@@ -1,6 +1,7 @@
 package models
 
 type Address struct {
+	City         string `json:"city" db:"city" validate:"required"`
 	Street       string `json:"street,omitempty" db:"street"`
 	Number       int    `json:"number,omitempty" db:"number"`
 	Neighborhood string `json:"neighborhood" db:"neighborhood" validate:"required"`

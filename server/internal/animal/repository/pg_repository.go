@@ -19,8 +19,10 @@ func CreateAnimal(db *sqlx.DB, animal *models.Animal) error {
 }
 
 func GetAnimals(state string, db *sqlx.DB) ([]*models.Animal, error) {
-	var animals []*models.Animal
-	var err error
+	var (
+		animals []*models.Animal
+		err     error
+	)
 
 	switch state {
 	case "lost":

@@ -21,3 +21,7 @@ stop-all:
 debug-server:
 	@echo Starting debug local server
 	cd server && go run cmd/api/main.go
+
+start-front:
+	@echo Starting frontend
+	cd app && npm run dev 
