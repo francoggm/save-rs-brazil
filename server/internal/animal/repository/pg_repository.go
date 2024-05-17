@@ -47,15 +47,15 @@ func GetAnimal(id int, state string, db *sqlx.DB) (*models.Animal, error) {
 
 	switch state {
 	case "lost":
-		err = db.Get(animal, queryGetAnimalByState, 1)
+		err = db.Get(animal, queryGetAnimalByState, id, 1)
 	case "found":
-		err = db.Get(animal, queryGetAnimalByState, 2)
+		err = db.Get(animal, queryGetAnimalByState, id, 2)
 	case "adoption":
-		err = db.Get(animal, queryGetAnimalByState, 3)
+		err = db.Get(animal, queryGetAnimalByState, id, 3)
 	default:
 		err = db.Get(animal, queryGetAnimal, id)
 	}
- 
+
 	if err != nil {
 		return nil, err
 	}
