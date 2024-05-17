@@ -3,57 +3,56 @@ package http
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/francoggm/save-rs-brazil/internal/animal/repository"
 	"github.com/francoggm/save-rs-brazil/internal/models"
-	"github.com/francoggm/save-rs-brazil/internal/rescue/repository"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/jmoiron/sqlx"
 )
 
-func createRescue(c fiber.Ctx, db *sqlx.DB) error {
-	rescue := new(models.Rescue)
+func createAnimal(c fiber.Ctx, db *sqlx.DB) error {
+	animal := new(models.Animal)
 
-	if err := c.Bind().Body(rescue); err != nil {
-		fmt.Println(err)
+	if err := c.Bind().Body(animal); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
 			"error": "invalid fields!",
 		})
 	}
 
 	validate := validator.New()
-	if err := validate.Struct(rescue); err != nil {
-		fmt.Println(err)
+	if err := validate.Struct(animal); err != nil {
 		return c.Status(http.StatusUnprocessableEntity).JSON(map[string]any{
 			"error": "invalid required fields!",
 		})
 	}
 
-	if err := repository.CreateRescue(db, rescue); err != nil {
-		fmt.Println(err)
+	if err := repository.CreateAnimal(db, animal); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
 			"error": err.Error(),
 		})
 	}
 
-	return c.Status(http.StatusOK).JSON(rescue)
+	return c.Status(http.StatusOK).JSON(animal)
 }
 
-func getRescues(c fiber.Ctx, db *sqlx.DB) error {
-	rescues, err := repository.GetRescues(db)
+func getAnimals(c fiber.Ctx, db *sqlx.DB) error {
+	state := c.Queries()["state"]
+
+	animals, err := repository.GetAnimals(state, db)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(map[string]any{
 			"error": err.Error(),
 		})
 	}
 
-	return c.Status(http.StatusOK).JSON(rescues)
+	return c.Status(http.StatusOK).JSON(animals)
 }
 
-func getRescue(c fiber.Ctx, db *sqlx.DB) error {
+func getAnimal(c fiber.Ctx, db *sqlx.DB) error {
 	param := c.Params("id")
 	id, err := strconv.Atoi(param)
 	if err != nil {
@@ -62,11 +61,13 @@ func getRescue(c fiber.Ctx, db *sqlx.DB) error {
 		})
 	}
 
-	rescue, err := repository.GetRescue(db, id)
+	state := c.Queries()["state"]
+
+	animal, err := repository.GetAnimal(id, state, db)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return c.Status(http.StatusNotFound).JSON(map[string]any{
-				"error": "rescue not found!",
+				"error": "find animal not found!",
 			})
 		}
 
@@ -75,5 +76,5 @@ func getRescue(c fiber.Ctx, db *sqlx.DB) error {
 		})
 	}
 
-	return c.Status(http.StatusOK).JSON(rescue)
+	return c.Status(http.StatusOK).JSON(animal)
 }

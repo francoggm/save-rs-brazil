@@ -7,14 +7,14 @@ import (
 
 func ConfigRoutes(router fiber.Router, db *sqlx.DB) {
 	router.Post("/", func(c fiber.Ctx) error {
-		return createFindAnimal(c, db)
+		return createAnimal(c, db)
 	})
 
 	router.Get("/", func(c fiber.Ctx) error {
-		return getFindAnimals(c, db)
+		return getAnimals(c, db)
 	})
 
 	router.Get("/:id", func(c fiber.Ctx) error {
-		return getFindAnimal(c, db)
+		return getAnimal(c, db)
 	})
 }

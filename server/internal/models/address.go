@@ -6,4 +6,5 @@ type Address struct {
 	Neighborhood string `json:"neighborhood" db:"neighborhood" validate:"required"`
 	ZIPCode      string `json:"zip_code,omitempty" db:"zip_code"`
 	Complement   string `json:"complement,omitempty" db:"complement"`
+	Phone        string `json:"phone,omitempty" db:"phone"`
 }
